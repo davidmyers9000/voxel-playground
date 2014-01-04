@@ -1,6 +1,8 @@
 voxel-playground
 ================
 
+[Source](http://voxeljs.com/#how)
+
 ## Step 1 - Install Node.js
 **What is node, and why use it?**
 		Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -16,30 +18,11 @@ cd ~/src
 git clone git@github.com:davidmyers9000/voxel-playground.git voxel-playground
 ```
 
-Once node.js is installed, you can install the basic voxel.js npm package in your project directory, and then install a basic texture pack. Make a file called package.json in your project directory and give it these contents:
-
-```
-{
-  "name": "mygamename",
-  "version": "0.0.1",
-  "dependencies": {
-    "voxel-hello-world": "0.6.0"
-  }
-} 
-```
-
 Now you can tell node to install your dependencies:
 
 ```
 npm install
 ```
-
-Next, create mygame.js and put the following code in it:
-
-{% highlight javascript %}
-var createGame = require('voxel-hello-world');
-var game = createGame();
-{% endhighlight %}
 
 Then to build your game you use [browserify](http://browserify.org/):
 ```
@@ -49,7 +32,7 @@ browserify mygame.js -o builtgame.js
 
 ### Step 2.1 - Extra Step Required for Boxen Users
 
-If you are using any custom shells like `zsh` than you might have to add `./node_modules/bin` to the [path](http://linuxg.net/how-to-set-a-new-path-in-bash-ksh-and-zsh/) and use the `rehash` command to update the zsh PATH.
+If you are having problems using browserify than you might have to add `./node_modules/bin` to the [path](http://linuxg.net/how-to-set-a-new-path-in-bash-ksh-and-zsh/) and use the `rehash` command to update the zsh PATH.
 
 To do this run
 ```
@@ -71,4 +54,17 @@ Now you create an index.html file in your project folder, and you should be play
     <script src="builtgame.js"></script>
   </body>
 </html>
+```
+
+
+`node_modules/voxel-hello-world` in your project directory is the basic voxel.js npm package. `package.json` controls your packages. Here you can install modules from the [voxel.js module page](http://voxeljs.com/#modules).
+
+```
+{
+  "name": "mygamename",
+  "version": "0.0.1",
+  "dependencies": {
+    "voxel-hello-world": "0.6.0"
+  }
+} 
 ```
