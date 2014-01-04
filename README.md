@@ -1,7 +1,7 @@
 voxel-playground
 ================
 
-### [Play here](http://davidmyers9000.github.io/voxel-playground)
+### [Play here](http://davidmyers9000.github.io/voxel-playground/)
 
 [Source](http://voxeljs.com/#how)
 
