@@ -1,99 +1,40 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var createGame = require('voxel-hello-world');
-var game = createGame();
-},{"voxel-hello-world":2}],2:[function(require,module,exports){
-var createGame = require('voxel-engine')
-var highlight = require('voxel-highlight')
-var player = require('voxel-player')
-var voxel = require('voxel')
-var extend = require('extend')
-var fly = require('voxel-fly')
-var walk = require('voxel-walk')
+var createGame = require('voxel-engine');
+var highlight = require('voxel-highlight');
+var player = require('voxel-player');
+var voxel = require('voxel');
+var extend = require('extend');
+var fly = require('voxel-fly');
+var walk = require('voxel-walk');
+var texturePath = require('painterly-textures');
 
-module.exports = function(opts, setup) {
-  setup = setup || defaultSetup
-  var defaults = {
-    generate: voxel.generator['Valley'],
-    chunkDistance: 2,
-    materials: ['#fff', '#000'],
-    materialFlatColor: true,
-    worldOrigin: [0, 0, 0],
-    controls: { discreteFire: true }
-  }
-  opts = extend({}, defaults, opts || {})
-
-  // setup the game and add some trees
-  var game = createGame(opts)
-  var container = opts.container || document.body
-  window.game = game // for debugging
-  game.appendTo(container)
-  if (game.notCapable()) return game
-  
-  var createPlayer = player(game)
-
-  // create the player from a minecraft skin file and tell the
-  // game to use it as the main player
-  var avatar = createPlayer(opts.playerSkin || 'player.png')
-  avatar.possess()
-  avatar.yaw.position.set(2, 14, 4)
-
-  setup(game, avatar)
-  
-  return game
-}
-
-function defaultSetup(game, avatar) {
-  
-  var makeFly = fly(game)
-  var target = game.controls.target()
-  game.flyer = makeFly(target)
-  
-  // highlight blocks when you look at them, hold <Ctrl> for block placement
-  var blockPosPlace, blockPosErase
-  var hl = game.highlighter = highlight(game, { color: 0xff0000 })
-  hl.on('highlight', function (voxelPos) { blockPosErase = voxelPos })
-  hl.on('remove', function (voxelPos) { blockPosErase = null })
-  hl.on('highlight-adjacent', function (voxelPos) { blockPosPlace = voxelPos })
-  hl.on('remove-adjacent', function (voxelPos) { blockPosPlace = null })
-
-  // toggle between first and third person modes
-  window.addEventListener('keydown', function (ev) {
-    if (ev.keyCode === 'R'.charCodeAt(0)) avatar.toggle()
-  })
-
-  // block interaction stuff, uses highlight data
-  var currentMaterial = 1
-
-  game.on('fire', function (target, state) {
-    var position = blockPosPlace
-    if (position) {
-      game.createBlock(position, currentMaterial)
-    }
-    else {
-      position = blockPosErase
-      if (position) game.setBlock(position, 0)
-    }
-  })
-
-  game.on('tick', function() {
-    walk.render(target.playerSkin)
-    var vx = Math.abs(target.velocity.x)
-    var vz = Math.abs(target.velocity.z)
-    if (vx > 0.001 || vz > 0.001) walk.stopWalking()
-    else walk.startWalking()
-  })
-
-}
-
-},{"extend":3,"voxel":51,"voxel-engine":4,"voxel-fly":39,"voxel-highlight":44,"voxel-player":47,"voxel-walk":49}],3:[function(require,module,exports){
+var game = createGame({
+  texturePath: "./textures/",
+  generate: function(x,y,z) {
+    return x*x+y*y+z*z <= 20*20 ? 1 : 0 // sphere world
+  },
+  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt'],
+  materialFlatColor: false,
+  chunkSize: 32,
+  chunkDistance: 2,
+  worldOrigin: [0, 0, 0],
+  controls: { discreteFire: false },
+  lightsDisabled: false,
+  fogDisabled: false,
+  generateChunks: true,
+  mesher: voxel.meshers.greedy,
+  playerHeight: 1.62
+});
+},{"extend":2,"painterly-textures":3,"voxel":51,"voxel-engine":4,"voxel-fly":39,"voxel-highlight":44,"voxel-player":47,"voxel-walk":49}],2:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
+var toString = Object.prototype.toString;
 
 function isPlainObject(obj) {
 	if (!obj || toString.call(obj) !== '[object Object]' || obj.nodeType || obj.setInterval)
 		return false;
 
-	var has_own_constructor = hasOwnProperty.call(obj, 'constructor');
-	var has_is_property_of_method = hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf');
+	var has_own_constructor = hasOwn.call(obj, 'constructor');
+	var has_is_property_of_method = hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
 	// Not own constructor property must be Object
 	if (obj.constructor && !has_own_constructor && !has_is_property_of_method)
 		return false;
@@ -164,7 +105,15 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+var __dirname="/node_modules/painterly-textures";var path = require('path')
+var texturePath = __dirname + '/textures'
+
+module.exports = function(dir) {
+  return path.relative(dir, texturePath) + '/'
+}
+
+},{"path":63}],4:[function(require,module,exports){
 var process=require("__browserify_process");var voxel = require('voxel')
 var voxelMesh = require('voxel-mesh')
 var ray = require('voxel-raycast')
