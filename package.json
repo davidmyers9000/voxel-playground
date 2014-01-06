@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "a voxeljs test env",
   "main": "index.js",
+  "scripts": {
+    "start": "echo \"open localhost:8080/\" && beefy ./index.js:bundle.js 8080 --live -d"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/davidmyers9000/voxel-playground.git"
