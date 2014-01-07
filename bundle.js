@@ -9,9 +9,9 @@ game.appendTo(container);
 
 var createPlayer = require("voxel-player")(game);
 
-var dude = createPlayer("shama.png");
+var dude = createPlayer('./textures/shama.png');
 dude.possess();
-dude.yaw.position.set(0, 100, 0);
+dude.yaw.position.set(0, 20, 0);
 },{"voxel-engine":2,"voxel-player":43}],2:[function(require,module,exports){
 var process=require("__browserify_process");var voxel = require('voxel')
 var voxelMesh = require('voxel-mesh')

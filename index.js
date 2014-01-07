@@ -8,6 +8,6 @@ game.appendTo(container);
 
 var createPlayer = require("voxel-player")(game);
 
-var dude = createPlayer('textures/shama.png');
+var dude = createPlayer('./textures/shama.png');
 dude.possess();
 dude.yaw.position.set(0, 20, 0);
